@@ -1,11 +1,20 @@
 <template>
-  <app-header/>
+  <div class="container-xl">
+    <h1>Main App Dashboard</h1>
+  </div>
 </template>
 
 <script>
-import appHeader from '~/components/app-header.vue'
+
 export default {
-  components: { appHeader },
-  name: 'IndexPage'
+
 }
 </script>
+
+<style lang="scss" scoped>
+.container-xl {
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+</style>
