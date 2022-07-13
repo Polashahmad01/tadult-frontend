@@ -2,7 +2,9 @@
   <header>
     <div class="container-xl">
       <div class="logo">
-        <h1><span>T</span>Adult</h1>
+        <nuxt-link to="/">
+          <h1><span>T</span>Adult</h1>
+        </nuxt-link>
       </div>
       <div @click="toggleMenu" class="hamburger">
         <div :class="{ hamburger__line1 : isShowMenu }" class="hamburger__line"></div>
@@ -13,7 +15,7 @@
         <nav class="navbar">
           <ul class="navbar__list">
             <li class="navbar__item">
-              <nuxt-link class="navbar__link" to="#">Sign In</nuxt-link>
+              <nuxt-link class="navbar__link" to="/signin">Sign In</nuxt-link>
             </li>
             <li class="navbar__item">
               <nuxt-link class="navbar__link" to="#">Sign Up</nuxt-link>
