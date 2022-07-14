@@ -18,7 +18,7 @@
               <nuxt-link class="navbar__link" to="/signin">Sign In</nuxt-link>
             </li>
             <li class="navbar__item">
-              <nuxt-link class="navbar__link" to="#">Sign Up</nuxt-link>
+              <nuxt-link class="navbar__link" to="/signup">Sign Up</nuxt-link>
             </li>
           </ul>
         </nav>
