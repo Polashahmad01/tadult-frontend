@@ -1,17 +1,17 @@
 <template>
   <div class="container-xl">
-    <form class="card">
+    <form class="card" @submit.prevent="loginUserWithEmailAndPassword">
       <div class="form-group">
         <p>Welcome back</p>
         <h1>Login to your account</h1>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" placeholder="john.doe@gmail.com">
+        <input v-model="email" type="email" placeholder="john.doe@gmail.com">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input :type="passwordType">
+        <input v-model="password" :type="passwordType">
         <svg v-if="isShowPassword" class="password-icon" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" @click="toggleShowPassword">
           <rect width="25" height="25" />
           <rect width="25" height="25" fill="url(#pattern0)"/>
@@ -48,24 +48,56 @@
 </template>
 
 <script>
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from "~/plugins/fireinit";
+
 export default {
-    data() {
-        return {
-            passwordType: "password",
-            isShowPassword: false,
-        }
+  data() {
+    return {
+      email: "",
+      password: "",
+      passwordType: "password",
+      isShowPassword: false,
+    }
+  },
+  methods: {
+    toggleShowPassword() {
+      if(this.passwordType === "password") {
+        this.passwordType = "text";
+        this.isShowPassword = true;
+      } else {
+          this.passwordType = "password";
+          this.isShowPassword = false;
+      }
     },
-    methods: {
-        toggleShowPassword() {
-            if(this.passwordType === "password") {
-                this.passwordType = "text";
-                this.isShowPassword = true;
-            } else {
-                this.passwordType = "password";
-                this.isShowPassword = false;
-            }
+    toastify(msg, actionText) {
+      this.$toasted.show(msg, {
+        theme: "toasted-primary",
+        position: "bottom-center",
+        duration: 5000,
+        action: {
+          text: actionText,
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
         }
+      });
     },
+    loginUserWithEmailAndPassword() {
+      if(!this.email || !this.password || this.password.length <= 6) {
+        this.toastify("Please enter email and password", "Try Again");
+        return;
+      }
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then(userCredential => {
+          // console.log(userCredential)
+          this.toastify("Successfully logged in", "Ok");
+        })
+        .catch( () => {
+          this.toastify("Invalid login credentials", "Try Again");
+        })
+    }
+  },
 }
 </script>
 
