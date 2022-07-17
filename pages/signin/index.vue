@@ -91,6 +91,7 @@ export default {
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then(userCredential => {
           // console.log(userCredential)
+          this.$router.push({ name: 'index'});
           this.toastify("Successfully logged in", "Ok");
         })
         .catch( () => {

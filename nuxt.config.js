@@ -27,6 +27,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/fireinit.js' },
+    { src: '~/plugins/fireauth.js' },
     { src: '~/plugins/vue-toasted.js'},
   ],
 
