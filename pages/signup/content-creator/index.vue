@@ -1,23 +1,23 @@
 <template>
   <div class="container-xl">
-    <div class="card">
+    <form class="card" @submit.prevent="createNewUserAsContentCreatorWithEmailAndPassword">
       <p>Welcome to <span>TAdult</span></p>
       <h1>Sign up as a <br> content creator</h1>
       <div class="form-group">
         <label for="fullName">Full Name</label>
-        <input type="text" name="fullName">
+        <input v-model="fullName" type="text" name="fullName">
       </div>
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" name="username">
+        <input v-model="userName" type="text" name="username">
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" name="email">
+        <input v-model="email" type="email" name="email">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input :type="passwordType" name="password">
+        <input v-model="password" :type="passwordType" name="password">
         <svg v-if="isShowPassword" class="password-icon" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" @click="toggleShowPassword">
           <rect width="25" height="25" />
           <rect width="25" height="25" fill="url(#pattern0)"/>
@@ -42,7 +42,7 @@
       </div>
       <div class="form-group">
         <label for="dob">Date of Birth</label>
-        <input type="date" name="dob">
+        <input v-model="dateOfBirth" type="date" name="dob">
       </div>
       <div class="form-group">
         <button type="submit">Submit</button>
@@ -50,16 +50,24 @@
       <div class="form-group">
         <p>Already have an account? <nuxt-link to="/signin">Sign In</nuxt-link></p>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import auth from "~/plugins/fireinit.js";
+
 export default {
   data() {
     return {
       passwordType: "password",
       isShowPassword: false,
+      fullName: "",
+      userName: "",
+      email: "",
+      password: "",
+      dateOfBirth: "",
     }
   },
   methods: {
@@ -71,6 +79,51 @@ export default {
         this.passwordType = "password";
         this.isShowPassword = false;
       }
+    },
+    toastify(msg, actionText) {
+      this.$toasted.show(msg, {
+        theme: "toasted-primary",
+        position: "bottom-center",
+        duration: 5000,
+        action: {
+          text: actionText,
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
+        }
+      });
+    },
+    createNewUserAsContentCreatorWithEmailAndPassword() {
+      if(!this.fullName || !this.userName || !this.dateOfBirth) {
+        this.toastify("Please fill all the fields", "Try Again");
+        return;
+      }
+      if(!this.email) {
+        this.toastify("Please enter a valid email", "Try Again");
+        return;
+      }
+      if(!this.password) {
+        this.toastify("Please fill out the password field", "Try Again");
+        return;
+      }
+      if(this.password.length <= 6) {
+        this.toastify("password must be at least 7 characters", "Try Again");
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // console.log(userCredential);
+          this.toastify("Account Successfully Created", "Ok");
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              this.$router.push({ path: "/check-email-inbox" });
+            })
+        })
+        .catch((error) => {
+          // console.log(error.message);
+          this.toastify(error.message, "Try Again");
+        });
     }
   },
 }
