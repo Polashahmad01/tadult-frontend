@@ -1,12 +1,12 @@
 <template>
   <div class="container-xl">
-      <form class="card">
+      <form class="card" @submit.prevent="updateUserPassword">
           <div class="form-group">
             <h1>New Password</h1>
           </div>
           <div class="form-group">
             <label for="password1">New password</label>
-            <input :type="passwordType" name="password1">
+            <input v-model="passwordOne" :type="passwordType" name="password1">
             <svg v-if="isShowPassword" class="password-icon" width="25" height="25" viewBox="0 0 25 25" fill="none"     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" @click="toggleShowPassword">
                 <rect width="25" height="25" />
                 <rect width="25" height="25" fill="url(#pattern0)"/>
@@ -31,7 +31,7 @@
           </div>
           <div class="form-group">
             <label for="password2">Retype password</label>
-            <input :type="passwordType" name="password2">
+            <input v-model="passwordTwo" :type="passwordType" name="password2">
             <svg v-if="isShowPassword" class="password-icon" width="25" height="25" viewBox="0 0 25 25" fill="none"           xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" @click="toggleShowPassword">
                 <rect width="25" height="25" />
                 <rect width="25" height="25" fill="url(#pattern0)"/>
@@ -62,24 +62,56 @@
 </template>
 
 <script>
+import { confirmPasswordReset } from "firebase/auth";
+import auth from "~/plugins/fireinit.js";
+
 export default {
-    data() {
-        return {
-            isShowPassword: false,
-            passwordType: "password",
-        }
+  data() {
+    return {
+      isShowPassword: false,
+      passwordType: "password",
+      passwordOne: "",
+      passwordTwo: "",
+    }
+  },
+  methods: {
+    toggleShowPassword() {
+      if(this.passwordType === "password") {
+        this.passwordType = "text";
+        this.isShowPassword = true;
+      } else {
+        this.passwordType = "password";
+        this.isShowPassword = false;
+      }
     },
-    methods: {
-        toggleShowPassword() {
-            if(this.passwordType === "password") {
-                this.passwordType = "text";
-                this.isShowPassword = true;
-            } else {
-                this.passwordType = "password";
-                this.isShowPassword = false;
-            }
+    toastify(msg, actionText) {
+      this.$toasted.show(msg, {
+        theme: "toasted-primary",
+        position: "bottom-center",
+        duration: 5000,
+        action: {
+          text: actionText,
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
         }
+      });
     },
+    updateUserPassword() {
+      if(this.passwordOne === this.passwordTwo && this.passwordOne.length >= 7) {
+        const code = this.$route.query.oobCode;
+        confirmPasswordReset(auth, code, this.passwordOne)
+          .then(() => {
+            this.toastify("Password Successfully Updated", "Ok");
+            this.$router.replace({ path: "/signin" });
+          })
+          .catch((error) => {
+            console.log(error.message);
+            this.toastify(error.message, "Try Again");
+          });
+      }
+    }
+  },
 }
 </script>
 
