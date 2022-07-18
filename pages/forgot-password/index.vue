@@ -1,6 +1,6 @@
 <template>
   <div class="container-xl">
-      <form class="card">
+      <form class="card" @submit.prevent="sendUserPasswordResetEmail">
           <div class="form-group">
               <h1>Forgot Password</h1>
               <p>
@@ -10,7 +10,7 @@
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" placeholder="john.doe@gmail.com">
+            <input v-model="email" type="email" placeholder="john.doe@gmail.com">
           </div>
           <div class="form-group">
             <button class="forgot-btn" type="submit">Reset password</button>
@@ -23,8 +23,41 @@
 </template>
 
 <script>
-export default {
+import { sendPasswordResetEmail } from "firebase/auth";
+import  auth from "~/plugins/fireinit.js"; 
 
+export default {
+  data() {
+    return {
+      email: "",
+    }
+  },
+  methods: {
+    toastify(msg, actionText) {
+      this.$toasted.show(msg, {
+        theme: "toasted-primary",
+        position: "bottom-center",
+        duration: 5000,
+        action: {
+          text: actionText,
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
+        }
+      });
+    },
+    sendUserPasswordResetEmail() {
+      sendPasswordResetEmail(auth, this.email)
+        .then(() => {
+          this.toastify("Email has been sent", "Ok");
+          this.email = "";
+        })
+        .catch((error) => {
+          // console.log(error);
+          this.toastify(error.message, "Try Aagin");
+        })
+    }
+  }
 }
 </script>
 
