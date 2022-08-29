@@ -1,0 +1,34 @@
+@import './reset';
+@import './variables';
+@import './mixins';
+
+body {
+  overflow-x: hidden;
+  font-family: $font-family;
+  background-color: $background-color;
+}
+
+.container {
+  width: 100%;
+}
+
+.container-sm {
+  max-width: 640px;
+}
+
+.container-md {
+  max-width: 768px;
+}
+
+.container-lg {
+  max-width: 1024px;
+}
+
+.container-xl {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.container-2xl {
+  max-width: 1536px;
+}

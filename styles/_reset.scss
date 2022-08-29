@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+  
+a {
+  text-decoration: none;
+}
+  
+ul {
+  list-style: none;
+}
+  
+.base-input {
+  padding: 0.5rem 1rem;
+  outline: 0;
+  border-radius: 5px;
+  border: 1px solid #ededed;
+}
+  
+.base-input-xl {
+  padding: 0.8rem 1rem;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #ededed;
+}
+  
+.base-button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+  
+.base-button-xl {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ededed;
+}
+  
