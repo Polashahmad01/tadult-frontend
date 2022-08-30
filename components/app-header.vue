@@ -48,7 +48,7 @@
       </div>
 
       <div v-if="isShowUserModal" class="user-modal">
-        <!-- <app-user-modal /> -->
+        <app-user-modal />
       </div>
       
     </div>
@@ -56,17 +56,21 @@
 </template>
 
 <script>
-// import AppUserModal from "~/components/app-user-modal.vue"
+import AppUserModal from "~/components/app-user-modal.vue"
     
 export default {
   components: {
-    // AppUserModal,
+    AppUserModal,
   },
   data() {
     return {
       isShowMobileMenu: false,
-      isShowUserModal: false,
-      user: false,  
+      isShowUserModal: false, 
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user
     }
   },
   methods: {
