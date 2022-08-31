@@ -127,7 +127,7 @@ export default {
             .then(() => {
               this.toastify(`A verification email has been sent. Please check your email inbox.`, "Ok")
               this.$store.dispatch('setUsername', this.userName);  
-              this.$router.push({ name: 'signin' })  
+              this.$router.push({ name: 'index' })  
             })           
         })
         .catch(() => {

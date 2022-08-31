@@ -122,7 +122,7 @@ export default {
           sendEmailVerification(auth.currentUser)
             .then(() => {
               this.toastify(`A verification email has been sent. Please check your email inbox.`, "Ok")  
-              this.$router.push({ name: 'signin' })
+              this.$router.push({ name: 'index' })
             });  
         })
         .catch(() => {

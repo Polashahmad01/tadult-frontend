@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import auth from '~/plugins/fireinit'
+
 export default {
   data() {
     return {
@@ -89,7 +91,11 @@ export default {
         dateOfBirth: this.dateOfBirth
       }
 
-      await this.$axios.put(`/persons?userName=Polashahmad01`, payload);
+      await this.$axios.put(`/persons/${auth.currentUser.uid}`, payload);
+
+      this.firstName = ""
+      this.lastName = ""
+      this.dateOfBirth = ""
     }
   }  
 }
