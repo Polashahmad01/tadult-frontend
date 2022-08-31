@@ -92,17 +92,6 @@ export default {
       this.isShowFormFirstPart = false
       this.isShowFormSecondPart = true  
     },
-    async signupAsContentCreatorWithEmailAndPassword() {
-      const payload = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        dateOfBirth: this.dateOfBirth,
-        userName: this.userName,
-        accountType: "Content-Creator"
-      }
-
-      await this.$axios.post("/persons", payload);  
-    },
     handleFormSubmit() {
       if(!this.userName) {
         this.toastify('Please fill the username field', 'Try Again')
@@ -120,19 +109,30 @@ export default {
 
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
-          // eslint-disable-next-line no-console
-          console.log(userCredential)   
+          const signupAsContentCreatorWithEmailAndPassword = async () => {
+            const payload = {
+              firstName: this.firstName,
+              lastName: this.lastName,
+              dateOfBirth: this.dateOfBirth,
+              userName: this.userName,
+              _id: userCredential.user.uid,
+              accountType: "Content-Creator",
+            }
+
+            await this.$axios.post("/persons", payload);
+          }
+          
+          signupAsContentCreatorWithEmailAndPassword()
           sendEmailVerification(auth.currentUser)
             .then(() => {
-              this.toastify(`A verification email has been sent. Please check your email inbox.`, "Ok")  
+              this.toastify(`A verification email has been sent. Please check your email inbox.`, "Ok")
+              this.$store.dispatch('setUsername', this.userName);  
               this.$router.push({ name: 'signin' })  
             })           
         })
         .catch(() => {
           this.toastify('The email address and or password is badly formatted', "Try Again")
         })
-
-        this.signupAsContentCreatorWithEmailAndPassword();
     }
   }  
 }

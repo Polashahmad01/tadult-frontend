@@ -38,7 +38,8 @@ export default {
         })
         .catch(() => {
           this.toastify('Unable to Sign-out. An error occurred', 'Try Again')  
-        })  
+        })
+      document.querySelector('.modal').style.display = "none"    
     }
   }
 }
@@ -113,4 +114,3 @@ export default {
   }
 }
 </style>
-  

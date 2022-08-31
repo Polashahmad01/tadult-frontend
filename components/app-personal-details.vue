@@ -5,21 +5,21 @@
       <p>Change personal information on your profile</p>
     </div>
   
-    <form v-if="isShowPersonalDetail">
+    <form v-if="isShowPersonalDetail" @submit.prevent="handleUpdateProfieForm">
       <div class="form">
         <div class="form-group">
           <label for="firstName">First Name</label>  
-          <input class="base-input-xl" type="text">
+          <input v-model="firstName" class="base-input-xl" type="text">
         </div>
         <div class="form-group">
           <label for="dob">Date of Birth</label>  
-          <input class="base-input-xl" type="date">
+          <input v-model="dateOfBirth" class="base-input-xl" type="date">
         </div>
       </div>
       <div class="form">
         <div class="form-group">
           <label for="lastName">Last Name</label>  
-          <input class="base-input-xl" type="text">
+          <input v-model="lastName" class="base-input-xl" type="text">
         </div>
         <div class="form-group">
           <label for="profilePicture">Profile Picture</label>  
@@ -38,12 +38,58 @@
 export default {
   data() {
     return {
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "",
       isShowPersonalDetail: false,  
     }
   },
   methods: {
+    toastify(msg, actionText) {
+      this.$toasted.show(msg, {
+        theme: "toasted-primary",
+        position: "bottom-center",
+        duration: 5000,
+        action: {
+          text: actionText,
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
+        }
+      });
+    },
     toggleIsShowPersonalDetail() {
       this.isShowPersonalDetail = !this.isShowPersonalDetail  
+    },
+    handleUpdateProfieForm() {
+      if(!this.firstName) {
+        this.toastify('Please fill the first name field', 'Try Again')
+        // eslint-disable-next-line no-useless-return
+        return 
+      }
+
+      if(!this.lastName) {
+        this.toastify('Please fill the last name field', 'Try Again')
+        // eslint-disable-next-line no-useless-return
+        return
+      }
+
+      if(!this.dateOfBirth) {
+        this.toastify('Please fill the date of birth field', 'Try Again')
+        // eslint-disable-next-line no-useless-return
+        return 
+      }
+
+      this.updatePersonalDetails();
+    },
+    async updatePersonalDetails() {
+      const payload = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        dateOfBirth: this.dateOfBirth
+      }
+
+      await this.$axios.put(`/persons?userName=Polashahmad01`, payload);
     }
   }  
 }

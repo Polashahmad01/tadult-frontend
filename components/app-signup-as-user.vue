@@ -60,7 +60,7 @@ export default {
       email: "",
       password: "",
       isShowFormFirstPart: true,
-      isShowFormSecondPart: false,  
+      isShowFormSecondPart: false, 
     }
   },
   methods: {
@@ -92,17 +92,6 @@ export default {
         }
       });
     },
-    async signupAsUserWithEmailAndPassword() {
-      const payload = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        dateOfBirth: this.dateOfBirth,
-        userName: this.userName,
-        accountType: "User"
-      }
-
-      await this.$axios.post("/persons", payload);
-    },
     handleFormSubmit() {
       if(!this.userName) {
         this.toastify('Please fill the username field', 'Try Again')
@@ -116,8 +105,20 @@ export default {
 
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
-          // eslint-disable-next-line no-console
-          console.log(userCredential)  
+          const signupAsUserWithEmailAndPassword = async () => {
+            const payload = {
+              firstName: this.firstName,
+              lastName: this.lastName,
+              dateOfBirth: this.dateOfBirth,
+              userName: this.userName,
+              _id: userCredential.user.uid,
+              accountType: "User"
+            }
+
+            await this.$axios.post("/persons", payload);
+          }
+
+          signupAsUserWithEmailAndPassword()
           sendEmailVerification(auth.currentUser)
             .then(() => {
               this.toastify(`A verification email has been sent. Please check your email inbox.`, "Ok")  
@@ -127,8 +128,6 @@ export default {
         .catch(() => {
           this.toastify('The email address and or password is badly formatted', "Try Again")
         })
-        
-        this.signupAsUserWithEmailAndPassword();
     }
   }  
 }
