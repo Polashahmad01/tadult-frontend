@@ -83,6 +83,7 @@ export default {
 
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then(() => {
+          this.$store.dispatch('setEmailAddress', this.email)
           this.toastify("Successfully logged in", "Ok")
           this.$router.push({ name: 'index' })  
         })

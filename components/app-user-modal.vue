@@ -2,7 +2,7 @@
   <div class="modal" @click="closeModal">
     <nuxt-link to="/profile">Edit</nuxt-link>
     <img src="~/static/img/user.png" alt="user profile"> 
-    <p>Polash Ahmad</p>
+    <p>{{ shortEmailForm }}</p>
     <hr> 
     <button @click="handleUserSignout">Sign out</button>
   </div>
@@ -13,6 +13,14 @@ import { signOut } from "firebase/auth"
 import auth from "~/plugins/fireinit"
 
 export default {
+  computed: {
+    emailAddress() {
+      return this.$store.state.emailAddress
+    },
+    shortEmailForm() {
+      return this.emailAddress.length > 20 ? this.emailAddress.split("@")[0] + '...' : this.emailAddress
+    }
+  },
   methods: {
     closeModal() {
       this.$emit("close")

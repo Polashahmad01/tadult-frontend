@@ -105,6 +105,7 @@ export default {
 
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
+          this.$store.dispatch('setEmailAddress', this.email)
           const signupAsUserWithEmailAndPassword = async () => {
             const payload = {
               firstName: this.firstName,
